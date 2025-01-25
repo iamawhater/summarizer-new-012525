@@ -6,6 +6,7 @@ import pkg from 'whisper-node';
 const { Whisper } = pkg;
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+dotenv.config();
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -14,8 +15,6 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-dotenv.config();
 
 const corsOptions = {
   origin: [
