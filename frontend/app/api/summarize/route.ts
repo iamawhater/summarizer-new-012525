@@ -15,9 +15,9 @@ export async function POST(request: Request) {
       summary: "This is a test summary. Replace this with your actual API implementation."
     });
 
-  } catch (error) {
+  } catch (err) { // Changed 'error' to 'err' and using it in the response
     return NextResponse.json(
-      { error: "Failed to summarize video" },
+      { error: err instanceof Error ? err.message : "Failed to summarize video" },
       { status: 500 }
     );
   }
