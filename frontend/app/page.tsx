@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Camera, FileText, Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
