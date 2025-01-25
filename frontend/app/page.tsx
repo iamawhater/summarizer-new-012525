@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState, FormEvent } from 'react'; // Remove React since we're not using JSX.createElement
 import { Camera, FileText, Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -10,7 +10,7 @@ const VideoSummarizer = () => {
   const [summary, setSummary] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -32,8 +32,12 @@ const VideoSummarizer = () => {
       }
 
       setSummary(data.summary);
-    } catch (err) {
-      setError(err.message);
+    } catch (error: unknown) { // Change any to unknown for better type safety
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
