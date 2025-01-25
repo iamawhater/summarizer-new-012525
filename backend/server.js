@@ -17,11 +17,21 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 
+const corsOptions = {
+  origin: [
+    process.env.FRONTEND_URL || https://vercel.com/iamawhaters-projects/summarizer-new-012525-wxa5/3oaGnLAN3Bfe29NhjBJi5vVdRzWV,
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Configure multer for temporary file storage
@@ -39,11 +49,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// Initialize Whisper
-const whisper = new Whisper({
-  modelName: 'base',
-  whisperPath: process.env.WHISPER_PATH || 'whisper'
-});
 
 // Utility function to clean up temporary files
 const cleanup = (filePath) => {
@@ -82,14 +87,19 @@ app.post('/api/summarize', async (req, res) => {
     });
 
     // Transcribe audio
-    const transcription = await whisper.transcribe(audioPath);
+    const transcription = await openai.audio.transcriptions.create({
+      file: fs.createReadStream(audioPath),
+      model: "whisper-1",
+    });
+    
+    const transcribedText = transcription.text;
 
     // Generate summary using OpenAI
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are an assistant that summarizes long texts." },
-        { role: "user", content: `Summarize the following content: ${transcription}. Give 10 very important bullet points` }
+        { role: "user", content: `Summarize the following content: ${transcribedText}. Give 10 very important bullet points` }
       ],
     });
 

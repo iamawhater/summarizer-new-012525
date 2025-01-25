@@ -17,7 +17,7 @@ const VideoSummarizer = () => {
     setSummary('');
 
     try {
-      const response = await fetch('/api/summarize', {
+      const response = await fetch('http://ec2-34-226-138-101.compute-1.amazonaws.com:3001/api/summarize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
